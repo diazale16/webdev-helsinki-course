@@ -1,35 +1,61 @@
 import { useState } from "react"
 
-const Display = ({ counter }) => <div>Counter: {counter}</div>
+const Display = ({ data, counter }) => <div>{data}: {counter}</div>
 
-const Button = ({ text, onClick}) => <button onClick={onClick}>{text}</button>
+const Button = ({ text, handlerClick}) => <button onClick={handlerClick}>{text}</button>
+
+const History = ({ allClicks }) => {
+  if (allClicks.length === 0) {
+    return (
+      <div>there is not pressed buttons</div>
+    )
+  }
+  return (
+    <div>pressed buttons: {allClicks.join(' ')}</div>
+  )
+}
 
 const App = () => {
-  const [ counter, setCounter] = useState(0)
+  const [ left, setLeft] = useState(0)
+  const [ right, setRight] = useState(0)
+  const [ allClick, setAll] = useState([])
+  const [ total, setTotal] = useState(0)
+
   // console.log(`rendering with counter value equals ${counter}`)
 
   // Increase the counter for every click
-  const increaseCounter = () => {
+  const handlerLeftClicks = () => {
     // console.log(`increasing value from the original ${counter}`)
-    setCounter(counter + 1)
+    setAll(allClick.concat('L'))
+    const newLeft = left + 1
+    setLeft(newLeft)
+    setTotal(newLeft + right)
   }
 
-  const decreaseCounter = () => {
+  const handlerRightClicks = () => {
     // console.log(`decreasing value from the original ${counter}`)
-    setCounter(counter - 1)
+    setAll(allClick.concat('R'))
+    const newRight = right + 1
+    setRight(newRight)
+    setTotal(left + newRight)
   }
 
-  const restartCounter = () => {
-    // console.log(`resetting to zero from the original ${counter}`)
-    setCounter(0)
+  const handlerResetAllClicks = () => {
+    setLeft(0)
+    setRight(0)
+    setAll([])
+    setTotal(0)
   }
 
   return (
     <div>
-      <Display counter={counter}></Display>
-      <Button text={"plus"} onClick={increaseCounter}></Button>
-      <Button onClick={decreaseCounter} text={"minus"}></Button>
-      <Button text={"restart"} onClick={restartCounter}></Button>
+      <Display data={"left"} counter={left}></Display>
+      <Button text={"left"} handlerClick={handlerLeftClicks}></Button>
+      <Display data={"right"} counter={right}></Display>
+      <Button text={"right"} handlerClick={handlerRightClicks}></Button>
+      <Display data={"total"} counter={total} ></Display>
+      <History allClicks={allClick}></History>
+      <Button text={"reset"} handlerClick={handlerResetAllClicks}></Button>
     </div>
   )
 }
