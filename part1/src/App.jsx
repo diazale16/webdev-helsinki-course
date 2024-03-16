@@ -90,14 +90,14 @@ const App = () => {
   }
 
   return (
-    <div>
-      <Header title={"give feedback"} ></Header>
+    <body>
+      <Header title={"give feedback!"} ></Header>
       <Button text={"good"} handlerClick={handlerGoodFeedback} ></Button>
       <Button text={"neutral"} handlerClick={handlerNeutralFeedback} ></Button>
       <Button text={"bad"} handlerClick={handlerBadFeedback} ></Button>
       <Header title={"statistics"} ></Header>
       <Statistics data={dataCompiled} handlers={handlersCompiled}></Statistics>
-    </div>
+    </body>
   )
 }
 
