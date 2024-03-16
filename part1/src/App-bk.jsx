@@ -1,66 +1,63 @@
-const Header = ({ course }) => {
+import { useState } from "react"
+
+const Display = ({ data, counter }) => <div>{data}: {counter}</div>
+
+const Button = ({ text, handlerClick}) => <button onClick={handlerClick}>{text}</button>
+
+const History = ({ allClicks }) => {
+  if (allClicks.length === 0) {
     return (
-      <h1>
-        {course.name}
-      </h1>
+      <div>there is not pressed buttons</div>
     )
   }
-  
-  const Part = ({ part }) => {
-    return (
-      <p>
-        {part.name} {part.exercise}
-      </p>
-    )
+  return (
+    <div>pressed buttons: {allClicks.join(' ')}</div>
+  )
+}
+
+const App = () => {
+  const [ left, setLeft] = useState(0)
+  const [ right, setRight] = useState(0)
+  const [ allClick, setAll] = useState([])
+  const [ total, setTotal] = useState(0)
+
+  // console.log(`rendering with counter value equals ${counter}`)
+
+  // Increase the counter for every click
+  const handlerLeftClicks = () => {
+    // console.log(`increasing value from the original ${counter}`)
+    setAll(allClick.concat('L'))
+    const newLeft = left + 1
+    setLeft(newLeft)
+    setTotal(newLeft + right)
   }
-  
-  const Content = ({ course }) => {
-    return (
-      <div>
-        {course.parts.map((element, index) => 
-          <Part key={index} name={element.name} exercise={element.exercises}></Part>)}
-      </div>
-    )
+
+  const handlerRightClicks = () => {
+    // console.log(`decreasing value from the original ${counter}`)
+    setAll(allClick.concat('R'))
+    const newRight = right + 1
+    setRight(newRight)
+    setTotal(left + newRight)
   }
-  
-  const Total = ({ course }) => {
-    const totalExercises = course.parts.reduce(
-      (accumulator, parte) => accumulator + parte.exercises, 0);
-    
-    return (
-      <p>
-        Number of exercises {totalExercises}
-      </p>
-    )
+
+  const handlerResetAllClicks = () => {
+    setLeft(0)
+    setRight(0)
+    setAll([])
+    setTotal(0)
   }
-  
-  
-  const App = () => {
-    const course = {
-      name: "Half Stack application course",
-      parts: [
-        {
-          name: "Fundamentals of React",
-          exercises: 10
-        },
-        {
-          name: "Using props to pass data",
-          exercises: 7
-        },
-        {
-          name: "State of a component",
-          exercises: 14
-        }
-      ]
-    }
-  
-    return (
-      <div>
-        <Header course={course} ></Header>
-        <Content course={course} ></Content>
-        <Total course={course} ></Total>
-      </div>
-    )
-  }
-  
-  export default App
+
+  return (
+    <div>
+      <Display data={"left"} counter={left}></Display>
+      <Button text={"left"} handlerClick={handlerLeftClicks}></Button>
+      <Display data={"right"} counter={right}></Display>
+      <Button text={"right"} handlerClick={handlerRightClicks}></Button>
+      <Display data={"total"} counter={total} ></Display>
+      <History allClicks={allClick}></History>
+      <Button text={"reset"} handlerClick={handlerResetAllClicks}></Button>
+    </div>
+  )
+}
+
+export default App
