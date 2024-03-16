@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Button = ({ text, handlerClick}) => <button onClick={handlerClick}> {text} </button>
 
-const Display = ({ value }) => <p>{value}</p>
+const Display = ({ text, value }) => <p>{text} {value}</p>
 
 const App = () => {
   const [ selected, setSelected ] = useState(0)
+  const [ votes, setVote ] = useState({})
+  
+  const initializeVotes = (list) => {
+    const initialVotes = {}
+    list.forEach((_, index) => {
+      initialVotes[index] = 0
+    })
+    return initialVotes
+  }
   
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -17,10 +26,30 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-
+  
+  useEffect(() => {
+      const initialVotes = initializeVotes(anecdotes)
+      setVote(initialVotes)
+    }, []);
+  
   const getRandomInt = (max) => {
     const randomNumber = Math.floor(Math.random() * max)
     return randomNumber
+  }
+
+  const handlerVoteAnecdote = () => {
+    const newVotes =  { ...votes }
+    newVotes[selected] = (votes[selected] || 0) + 1
+    setVote(newVotes)
+    // console.log("old votes:")
+    // console.log(votes)
+    console.log("new votes:")
+    console.log(newVotes)
+  }
+
+  const handlerResetVotes = () => {
+    setVote(initializeVotes(anecdotes))
+    console.log(votes);
   }
 
   const handlerNextAnecdote = () => {
@@ -28,13 +57,18 @@ const App = () => {
     while (selected === newSelected) {
       newSelected = getRandomInt(anecdotes.length)
     }
+    console.log(`new selected ${newSelected}`)
     setSelected(newSelected)
   } 
   
   return (
     <div>
-      <Display value={anecdotes[selected]}></Display>
+      <Display text="" value={anecdotes[selected]}></Display>
+      <Display text="Votes for anecdote: " value={votes[selected]}></Display>
+      <Button text={"vote"} handlerClick={handlerVoteAnecdote}></Button>
       <Button text={"next anecdote"} handlerClick={handlerNextAnecdote}></Button>
+      <br />
+      <Button text={"reset votes"} handlerClick={handlerResetVotes}></Button>
     </div>
   )
 }
