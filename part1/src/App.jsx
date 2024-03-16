@@ -4,7 +4,32 @@ const Header = ({ title }) => <h1>{title}</h1>
 
 const Display = ({ text, counter }) => <p>{text}: {counter}</p>
 
+const Percent = ({ text, counter }) => <p>{text}: {counter} %</p>
+
 const Button = ({ text, handlerClick}) => <button onClick={handlerClick}>{text}</button>
+
+const Statistics = ({ data, handlers }) => {
+  if (data.allOpinions === 0) {
+    return (
+      <div>No feedback given</div>
+    )
+  }
+
+  const averageScore = (data.good - data.bad)/(data.good + data.neutral + data.bad)
+  const positivePercent = (data.good / data.allOpinions * 100)
+
+  return (
+    <div>
+      <Display text={"good"} counter={data.good} ></Display>
+      <Display text={"neutral"} counter={data.neutral} ></Display>
+      <Display text={"bad"} counter={data.bad} ></Display>
+      <Display text={"all"} counter={data.allOpinions} ></Display>
+      <Display text={"average"} counter={averageScore} ></Display>
+      <Percent text={"positive"} counter={positivePercent} ></Percent>
+      <Button text={"reset"} handlerClick={handlers.handlerReset} ></Button>
+    </div>
+  )
+}
 
 // const History = ({ allClicks }) => {
 //   if (allClicks.length === 0) {
@@ -48,23 +73,25 @@ const App = () => {
     setAll(0)
   }
 
-  const averageScore = (good - bad)/(good + neutral + bad)
-  const positivePercent = (good / allOpinions * 100)
+  const dataCompiled = {
+    allOpinions: allOpinions,
+    good: good,
+    neutral: neutral,
+    bad: bad
+  }
+
+  const handlersCompiled = {
+    handlerReset: handlerReset
+  }
 
   return (
     <div>
-      <Header title={"give feedback"}></Header>
-      <Button text={"good"} handlerClick={handlerGoodFeedback}></Button>
-      <Button text={"neutral"} handlerClick={handlerNeutralFeedback}></Button>
-      <Button text={"bad"} handlerClick={handlerBadFeedback}></Button>
-      <Header title={"statistics"}></Header>
-      <Display text={"good"} counter={good}></Display>
-      <Display text={"neutral"} counter={neutral}></Display>
-      <Display text={"bad"} counter={bad}></Display>
-      <Display text={"all"} counter={allOpinions}></Display>
-      <Display text={"average"} counter={averageScore}></Display>
-      <Display text={"positive"} counter={positivePercent}></Display>
-      <Button text={"reset"} handlerClick={handlerReset}></Button>
+      <Header title={"give feedback"} ></Header>
+      <Button text={"good"} handlerClick={handlerGoodFeedback} ></Button>
+      <Button text={"neutral"} handlerClick={handlerNeutralFeedback} ></Button>
+      <Button text={"bad"} handlerClick={handlerBadFeedback} ></Button>
+      <Header title={"statistics"} ></Header>
+      <Statistics data={dataCompiled} handlers={handlersCompiled}></Statistics>
     </div>
   )
 }
