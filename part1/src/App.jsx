@@ -2,11 +2,16 @@ import { useState } from "react"
 
 const Header = ({ title }) => <h1>{title}</h1>
 
-const Display = ({ text, counter }) => <p>{text}: {counter}</p>
-
-const Percent = ({ text, counter }) => <p>{text}: {counter} %</p>
-
 const Button = ({ text, handlerClick}) => <button onClick={handlerClick}>{text}</button>
+
+const StatisticsLine = ({ text, value }) => {
+  return ( 
+    <tr>
+      <td>{text}:</td>
+      <td>{value}</td>
+    </tr> 
+  )
+}
 
 const Statistics = ({ data, handlers }) => {
   if (data.allOpinions === 0) {
@@ -19,15 +24,15 @@ const Statistics = ({ data, handlers }) => {
   const positivePercent = (data.good / data.allOpinions * 100)
 
   return (
-    <div>
-      <Display text={"good"} counter={data.good} ></Display>
-      <Display text={"neutral"} counter={data.neutral} ></Display>
-      <Display text={"bad"} counter={data.bad} ></Display>
-      <Display text={"all"} counter={data.allOpinions} ></Display>
-      <Display text={"average"} counter={averageScore} ></Display>
-      <Percent text={"positive"} counter={positivePercent} ></Percent>
+    <table>
+      <StatisticsLine text="good" value={data.good} ></StatisticsLine>
+      <StatisticsLine text="neutral" value={data.neutral} ></StatisticsLine>
+      <StatisticsLine text="bad" value={data.bad} ></StatisticsLine>
+      <StatisticsLine text="all" value={data.allOpinions} ></StatisticsLine>
+      <StatisticsLine text="average" value={averageScore} ></StatisticsLine>
+      <StatisticsLine text="positive" value={positivePercent} ></StatisticsLine>
       <Button text={"reset"} handlerClick={handlers.handlerReset} ></Button>
-    </div>
+    </table>
   )
 }
 
