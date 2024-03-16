@@ -1,61 +1,64 @@
 import { useState } from "react"
 
-const Display = ({ data, counter }) => <div>{data}: {counter}</div>
+const Header = ({ title }) => <h1>{title}</h1>
+
+const Display = ({ text, counter }) => <p>{text}: {counter}</p>
 
 const Button = ({ text, handlerClick}) => <button onClick={handlerClick}>{text}</button>
 
-const History = ({ allClicks }) => {
-  if (allClicks.length === 0) {
-    return (
-      <div>there is not pressed buttons</div>
-    )
-  }
-  return (
-    <div>pressed buttons: {allClicks.join(' ')}</div>
-  )
-}
+// const History = ({ allClicks }) => {
+//   if (allClicks.length === 0) {
+//     return (
+//       <div>there is not pressed buttons</div>
+//     )
+//   }
+//   return (
+//     <div>pressed buttons: {allClicks.join(' ')}</div>
+//   )
+// }
 
 const App = () => {
-  const [ left, setLeft] = useState(0)
-  const [ right, setRight] = useState(0)
-  const [ allClick, setAll] = useState([])
-  const [ total, setTotal] = useState(0)
+  const [ good, setGood] = useState(0)
+  const [ neutral, setNeutral] = useState(0)
+  const [ bad, setBad] = useState(0)
 
   // console.log(`rendering with counter value equals ${counter}`)
 
   // Increase the counter for every click
-  const handlerLeftClicks = () => {
+  const handlerGoodFeedback = () => {
     // console.log(`increasing value from the original ${counter}`)
-    setAll(allClick.concat('L'))
-    const newLeft = left + 1
-    setLeft(newLeft)
-    setTotal(newLeft + right)
+    const newGood = good + 1
+    setGood(newGood)
   }
 
-  const handlerRightClicks = () => {
+  const handlerNeutralFeedback = () => {
     // console.log(`decreasing value from the original ${counter}`)
-    setAll(allClick.concat('R'))
-    const newRight = right + 1
-    setRight(newRight)
-    setTotal(left + newRight)
+    const newNeutral = neutral + 1
+    setNeutral(newNeutral)
   }
 
-  const handlerResetAllClicks = () => {
-    setLeft(0)
-    setRight(0)
-    setAll([])
-    setTotal(0)
+  const handlerBadFeedback = () => {
+    const newBad = bad + 1
+    setBad(newBad)
+  }
+
+  const handlerReset = () => {
+    setGood(0)
+    setNeutral(0)
+    setBad(0)
   }
 
   return (
     <div>
-      <Display data={"left"} counter={left}></Display>
-      <Button text={"left"} handlerClick={handlerLeftClicks}></Button>
-      <Display data={"right"} counter={right}></Display>
-      <Button text={"right"} handlerClick={handlerRightClicks}></Button>
-      <Display data={"total"} counter={total} ></Display>
-      <History allClicks={allClick}></History>
-      <Button text={"reset"} handlerClick={handlerResetAllClicks}></Button>
+      <Header title={"give feedback"}></Header>
+      <Button text={"good"} handlerClick={handlerGoodFeedback}></Button>
+      <Button text={"neutral"} handlerClick={handlerNeutralFeedback}></Button>
+      <Button text={"bad"} handlerClick={handlerBadFeedback}></Button>
+      <Header title={"statistics"}></Header>
+      <Display text={"good"} counter={good}></Display>
+      <Display text={"neutral"} counter={neutral}></Display>
+      <Display text={"bad"} counter={bad}></Display>
+      <Button text={"reset"} handlerClick={handlerReset}></Button>
     </div>
   )
 }
